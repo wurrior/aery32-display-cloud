@@ -29,14 +29,14 @@
  * 
  */
 
-#include <aery32/all.h>
+#include <aery32/gpio.h>
 #include "ascii.h"
 #include "gfx.h"
 #include "lcd.h"
 
 BYTE ImageBuffer[GFX_BUFFER_SIZE];
 
-void displayCloud::test_image()
+void display::test_image()
 {
 	area_reset();
 	aery::gpio_set_pin_low( CS );
@@ -81,14 +81,14 @@ void displayCloud::test_image()
 	aery::gpio_set_pin_high( CS );
 }
 
-void displayCloud::set_pixel( unsigned int x, unsigned int y, unsigned int color )
+void display::set_pixel( unsigned int x, unsigned int y, unsigned int color )
 {
 	area_set(x,y,x,y);
 	// set color
 	set_reg_lcd( 0x22, color );
 }
 
-void displayCloud::fill_rectangle( unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color )
+void display::fill_rectangle( unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color )
 {
 	area_set( x, y, x+width-1, y+height-1 );
 		
@@ -107,7 +107,7 @@ void displayCloud::fill_rectangle( unsigned int x, unsigned int y, unsigned int 
 	
 }
 
-void displayCloud::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2, unsigned int color )
+void display::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2, unsigned int color )
 {
 	    int	xofs,
 	    yofs,
@@ -178,9 +178,9 @@ void displayCloud::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,un
     }
 }
 
-void displayCloud::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )
+void display::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )
 {
-	uint bytesRead, k=0, offset, pixel;
+	unsigned int bytesRead = 0, k = 0, offset = 0, pixel = 0;
 	bool first = true, rgb1555 = false;
 	FIL file;
 	FRESULT rc;
@@ -275,7 +275,7 @@ void displayCloud::show_image( unsigned int x, unsigned int y, unsigned int widt
 	set_reg_lcd( 0x16, 0x10 );
 }
 
-void displayCloud::print_text_v( int x, int y, unsigned int color, char* txt )
+void display::print_text_v( int x, int y, unsigned int color, char* txt )
 {
 	char *cp, col;
 	uint8_t mask;
@@ -300,7 +300,7 @@ void displayCloud::print_text_v( int x, int y, unsigned int color, char* txt )
 	}
 }
 
-void displayCloud::print_text_h( int x, int y, unsigned int color, char* txt )
+void display::print_text_h( int x, int y, unsigned int color, char* txt )
 {
 	char *cp, col;
 	uint8_t mask;

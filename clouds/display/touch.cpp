@@ -29,12 +29,14 @@
  * 
  */
 
-#include <aery32/all.h>
+#include <aery32/gpio.h>
+#include <aery32/twi.h>
+#include <aery32/delay.h>
 #include "touch.h"
 #include "lcd.h"
 #include "gfx.h"
 
-namespace displayCloud // private functions
+namespace display // private functions
 {
 	unsigned char buffer[5];
 	/**
@@ -43,7 +45,7 @@ namespace displayCloud // private functions
 	void checkpoint();	
 }
 
-void displayCloud::checkpoint()
+void display::checkpoint()
 {
 	unsigned char arr1[4];
 	do{
@@ -56,7 +58,7 @@ void displayCloud::checkpoint()
 	} while( (arr1[0] != 0x55) || arr1[2] || (arr1[3] != 0x14) );
 }
 
-void displayCloud::touch_init()
+void display::touch_init()
 {
 	aery::gpio_init_pins( aery::porta, (1<<AVR32_PIN_PA29) | (1<<AVR32_PIN_PA30), GPIO_FUNCTION_A | GPIO_OPENDRAIN);
 	aery::gpio_init_pin( SDO, GPIO_INPUT );
@@ -64,7 +66,7 @@ void displayCloud::touch_init()
 	aery::delay_ms(100);
 }
 
-void displayCloud::touch_calibrate()
+void display::touch_calibrate()
 {
 	touch_disable();
 	
@@ -115,7 +117,7 @@ void displayCloud::touch_calibrate()
 	checkpoint();// eeprom ready
 }
 
-void displayCloud::touch_enable()
+void display::touch_enable()
 {
 	aery::twi_select_slave( 0x4D );
 	unsigned char arr[5] = {0x55,0x01,0x12};
@@ -129,7 +131,7 @@ void displayCloud::touch_enable()
 	}
 }
 
-void displayCloud::touch_send_data( uint8_t arr[], int size )
+void display::touch_send_data( uint8_t arr[], int size )
 {
 	aery::twi_select_slave( 0x4D );
 	aery::twi_write_nbytes( arr, size );
@@ -139,7 +141,7 @@ void displayCloud::touch_send_data( uint8_t arr[], int size )
 
 }
 
-void displayCloud::touch_disable()
+void display::touch_disable()
 {
 	aery::twi_select_slave( 0x4D );
 	unsigned char arr[5] = {0x55,0x01,0x13};
@@ -155,7 +157,7 @@ void displayCloud::touch_disable()
 	}
 }
 
-void displayCloud::touch_set_reg( int reg, int val )
+void display::touch_set_reg( int reg, int val )
 {
 	
 	int addressoffet = 0x20; // TODO: read from chip
@@ -175,12 +177,12 @@ void displayCloud::touch_set_reg( int reg, int val )
 	aery::delay_ms(50);
 }
 
- void displayCloud::touch_wait_for_data(void)
+ void display::touch_wait_for_data(void)
  {
 	while( !aery::gpio_read_pin(SDO) )  asm("nop");
  }
  
- displayCloud::touch_t displayCloud::touch_get_data()
+ display::touch_t display::touch_get_data()
  {
 	touch_t touch;
 	aery::twi_read_nbytes( buffer, 5 );

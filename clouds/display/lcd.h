@@ -35,16 +35,16 @@
 #include "fatfs/ff.h"
 
 // PINS:
-#define RD					AVR32_PIN_PB19 // AVR32_PIN_PB20
-#define WR					AVR32_PIN_PB20 // AVR32_PIN_PB19
-#define RS					AVR32_PIN_PB21
-#define CS					AVR32_PIN_PB22
-#define RST					AVR32_PIN_PB23 // AVR32_PIN_PB18
+#define RD				AVR32_PIN_PB19 // AVR32_PIN_PB20
+#define WR				AVR32_PIN_PB20 // AVR32_PIN_PB19
+#define RS				AVR32_PIN_PB21
+#define CS				AVR32_PIN_PB22
+#define RST				AVR32_PIN_PB23 // AVR32_PIN_PB18
 #define DISPLAY_LED			AVR32_PIN_PB24
 #define FMARK				AVR32_PIN_PB25
 #define DATAMASK			0x0003FFFF
 
-#define SDO					AVR32_PIN_PB27
+#define SDO				AVR32_PIN_PB27
 
 // MACROS:
 /**
@@ -74,30 +74,31 @@
 #define disable_fast_transfer() __builtin_mtsr(AVR32_CPUCR, __builtin_mfsr(AVR32_CPUCR) & ~AVR32_CPUCR_LOCEN_MASK);
 
 
-namespace displayCloud
-{
-	/**
-	 *	\brief Initialize the LCD panel
-	 *	This must be called before any other display related functions
-	 */
-	void lcd_init( void );
-	/**
-	 *	\brief Set value of a display driver register
-	 */
-	void set_reg_lcd( unsigned char add, unsigned short val );
-	/**
-	 * \brief Read the value of a display driver register
-	 */
-	int read_reg_lcd( unsigned short reg );
-	/**
-	 *	\brief Set RAM access area
-	 */
-	void area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye );
-	/**
-	 *	\brief Set RAM access area to default size (full screen)
-	 */
-	void area_reset();
-}
+namespace display {
+/**
+ *	\brief Initialize the LCD panel
+ *	This must be called before any other display related functions
+ */
+void lcd_init( void );
+/**
+ *	\brief Set value of a display driver register
+ */
+void set_reg_lcd( unsigned char add, unsigned short val );
+/**
+ * \brief Read the value of a display driver register
+ */
+int read_reg_lcd( unsigned short reg );
+/**
+ *	\brief Set RAM access area
+ */
+void area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye );
+/**
+ *	\brief Set RAM access area to default size (full screen)
+ */
+void area_reset();
+
+} /* end of namespace display */
+
 #define DISPLAY_32
 
 #endif /* LCD_H_ */

@@ -29,18 +29,19 @@
  * 
  */
 
-#include <aery32/all.h>
+#include <aery32/gpio.h>
+#include <aery32/delay.h>
 #include "lcd.h"
 #include "bc.h"
 
-namespace displayCloud {
+namespace display {
 	// store the current value for brightness:
 	char current_brightness = 32; 
 }
 
-void displayCloud::decrease_brightness( int steps )
+void display::decrease_brightness( int steps )
 {
-	for( int i = 0; i< steps; i++ )
+	for( int i = 0; i < steps; i++ )
 	{
 		aery::gpio_set_pin_low( DISPLAY_LED );
 		aery::delay_us(1);
@@ -48,23 +49,23 @@ void displayCloud::decrease_brightness( int steps )
 	}
 }
 
-char displayCloud::get_brightness_level( void )
+char display::get_brightness_level( void )
 {
 	return current_brightness;
 }
 
-void displayCloud::increase_brightness( int steps )
+void display::increase_brightness( int steps )
 {
 	/* the controller only supports decreasing */
 	decrease_brightness( 32 - steps );
 }
 
-void displayCloud::set_brightness( char val )
+void display::set_brightness( char val )
 {
 	if( val > 32 ) val = 32;
 	if( val < 0 ) val = 0;
 	if( val < current_brightness )
-		displayCloud::decrease_brightness( current_brightness - val );
+		display::decrease_brightness( current_brightness - val );
 	else if ( val > current_brightness )
-		displayCloud::decrease_brightness( 32 - (val - current_brightness) );
+		display::decrease_brightness( 32 - (val - current_brightness) );
 }

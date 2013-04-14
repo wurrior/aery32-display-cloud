@@ -32,7 +32,10 @@
 /************************************************************************/
 /* Includes                                                             */
 /************************************************************************/
-#include "common.h"			// environment settings and platform headers
+#include <aery32/gpio.h>
+#include <aery32/intc.h>
+#include <aery32/delay.h>
+#include <aery32/spi.h>
 #include "sdcard.h"			// Common include file for FatFs and disk I/O layer
 
 /************************************************************************/
@@ -48,11 +51,11 @@
 #define CS_L()			aery::gpio_set_pin_low( MMC_CS )	// Set MMC CS "low"
 
 /* MMC/SD commands (SPI mode): */
-#define CMD0	(0)			// GO_IDLE_STATE
-#define CMD1	(1)			// SEND_OP_COND
+#define CMD0	(0)		// GO_IDLE_STATE
+#define CMD1	(1)		// SEND_OP_COND
 #define	ACMD41	(0x80+41)	// SEND_OP_COND (SDC)
-#define CMD8	(8)			// SEND_IF_COND
-#define CMD9	(9)			// SEND_CSD
+#define CMD8	(8)		// SEND_IF_COND
+#define CMD9	(9)		// SEND_CSD
 #define CMD10	(10)		// SEND_CID
 #define CMD12	(12)		// STOP_TRANSMISSION
 #define CMD13	(13)		// SEND_STATUS
@@ -79,7 +82,7 @@ char dummy[514];
 /************************************************************************/
 
 volatile bool multiBlockTransfer = false;
-volatile uint multiBlockTransferCounter = 0;
+volatile unsigned int multiBlockTransferCounter = 0;
 BYTE * multiBlockTransferBuffer;
 void pdca_int_handler(void) // interrupt handler
 {
@@ -340,7 +343,7 @@ DSTATUS disk_initialize (
 )
 {
 	BYTE ty = 0, cmd, response, rbuf[4];
-	uint tmr;
+	unsigned int tmr;
 	DSTATUS s;
 
 	if (drv) return RES_NOTRDY;

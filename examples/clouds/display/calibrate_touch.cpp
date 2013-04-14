@@ -3,8 +3,6 @@
 
 #include "clouds/display/display.h"
 
-using namespace displayCloud;
-
 int main(void)
 {
 	board::init();
@@ -17,8 +15,8 @@ int main(void)
 	 * Tap and hold on the marker for atleast one second. Release and the
 	 * next one appears, if not recycle the power and start again.
 	 */
-	lcd_init();        // Initialize display
-	touch_init();      // Initialize touch controller
-	touch_calibrate(); // Run the calibration sequence	
-	test_image();      // Show that the calibration has ended
+	display::lcd_init();        // Initialize display
+	display::touch_init();      // Initialize touch controller
+	display::touch_calibrate(); // Run the calibration sequence	
+	display::test_image();      // Show that the calibration has ended
 }

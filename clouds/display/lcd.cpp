@@ -49,7 +49,7 @@ write_area_x_end = 240,
 write_area_y_end = 400;
 
 
-int displayCloud::read_reg_lcd( unsigned short reg )
+int display::read_reg_lcd( unsigned short reg )
 {
 	unsigned short temp;
 	aery::gpio_set_pin_low( CS );
@@ -69,7 +69,7 @@ int displayCloud::read_reg_lcd( unsigned short reg )
 	return temp;
 }
 
-void displayCloud::set_reg_lcd( unsigned char add, unsigned short val )
+void display::set_reg_lcd( unsigned char add, unsigned short val )
 {	
 	aery::gpio_set_pin_low( CS );
 	aery::gpio_set_pin_low( RS ); // write to register
@@ -79,7 +79,7 @@ void displayCloud::set_reg_lcd( unsigned char add, unsigned short val )
 	aery::gpio_set_pin_high( CS );
 }
 
-void displayCloud::lcd_init( void )
+void display::lcd_init( void )
 {	
 	aery::delay_ms(10);
 	aery::gpio_init_pins( aery::portb, 0xffffffff, GPIO_OUTPUT );
@@ -144,12 +144,12 @@ void displayCloud::lcd_init( void )
 	test_image();
 }
 
-void displayCloud::area_reset()
+void display::area_reset()
 {
 	area_set( 0, 0, 239, 399 );
 }
 
-void displayCloud::area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
+void display::area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
 {
 		// move ram pointer if needed
 		if( write_area_x_begin != xb )

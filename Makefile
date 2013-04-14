@@ -5,7 +5,7 @@
 # |__|__|___|_| |_  |___|___|  |  https://github.com/aery32
 #               |___|          |
 #
-# Copyright (c) 2012, Muiku Oy
+# Copyright (c) 2012-2013, Muiku Oy
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -43,7 +43,7 @@ MPART=uc3a1256
 # Project's source files
 SOURCES=$(wildcard *.cpp) $(wildcard *.c)
 SOURCES+=$(wildcard clouds/*/*.cpp)
-SOURCES+=$(wildcard clouds/fatfs/*.c)
+SOURCES+=$(wildcard clouds/display/fatfs/*.c)
 EXCLUDE=
 
 # Global project wide settings file. IMPORTANT! Define with absolute path.
