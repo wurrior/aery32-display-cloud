@@ -41,11 +41,9 @@ TARGET=aery32
 MPART=uc3a1256
 
 # Project's source files
-SOURCES=$(wildcard *.cpp) $(wildcard *.c) \
-$(wildcard clouds/display_cloud/*.cpp) \
-$(wildcard clouds/display_cloud/*.c) \
-$(wildcard clouds/display_cloud/fatfs/*.cpp) \
-$(wildcard clouds/display_cloud/fatfs/*.c) 
+SOURCES=$(wildcard *.cpp) $(wildcard *.c)
+SOURCES+=$(wildcard clouds/*/*.cpp)
+SOURCES+=$(wildcard clouds/fatfs/*.c)
 EXCLUDE=
 
 # Global project wide settings file. IMPORTANT! Define with absolute path.

@@ -29,8 +29,10 @@
  * 
  */
 
-#include "common.h"
-#include "display_cloud.h"
+#include <aery32/all.h>
+#include "touch.h"
+#include "lcd.h"
+#include "gfx.h"
 
 namespace displayCloud // private functions
 {

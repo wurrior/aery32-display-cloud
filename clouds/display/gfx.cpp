@@ -29,9 +29,10 @@
  * 
  */
 
-#include "common.h"
-#include "display_cloud.h"
+#include <aery32/all.h>
 #include "ascii.h"
+#include "gfx.h"
+#include "lcd.h"
 
 BYTE ImageBuffer[GFX_BUFFER_SIZE];
 

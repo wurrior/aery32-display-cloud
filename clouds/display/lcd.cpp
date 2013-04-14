@@ -29,8 +29,9 @@
  * 
  */
  
-#include "common.h"
-#include "display_cloud.h"
+#include <aery32/all.h>
+#include "lcd.h"
+#include "gfx.h"
 
 extern bool buttonPressed; // indicates a tap on the screen
 
