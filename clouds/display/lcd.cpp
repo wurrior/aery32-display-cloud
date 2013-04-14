@@ -29,7 +29,8 @@
  * 
  */
  
-#include <aery32/all.h>
+#include <aery32/gpio.h>
+#include <aery32/delay.h>
 #include "lcd.h"
 #include "gfx.h"
 
