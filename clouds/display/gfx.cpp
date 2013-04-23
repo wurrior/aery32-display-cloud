@@ -51,31 +51,31 @@ void display::test_image()
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( 0xF000 );
+	send_data_lcd( RED );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( 0xFFC0 );
+	send_data_lcd( YELLOW );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-		send_data_lcd( 0x0FC0 );
+		send_data_lcd( GREEN );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-		send_data_lcd( 0x0FFF );
+		send_data_lcd( GREEN | BLUE );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-		send_data_lcd( 0x003F );
+		send_data_lcd( BLUE );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( 0xF03F );
+	send_data_lcd( RED | BLUE );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( 0xFFFF );
+	send_data_lcd( WHITE );
 	}			
 	
 	aery::gpio_set_pin_high( CS );

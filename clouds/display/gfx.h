@@ -35,6 +35,14 @@
 // Define buffer size used by show_image():
 #define GFX_BUFFER_SIZE 12000 // in Bytes
 
+// color values:
+#define RED		0xF800
+#define GREEN	0x07E0
+#define BLUE	0x001F
+#define YELLOW	0xFFE0
+#define BLACK	0x0000
+#define WHITE	0xFFFF
+
 // Uncummend following line, you dont use FATFS:
 // #define NO_FATFS
 
