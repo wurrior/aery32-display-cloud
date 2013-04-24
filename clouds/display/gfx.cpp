@@ -30,7 +30,7 @@
  */
 
 #include <aery32/gpio.h>
-#include "ascii.h"
+#include "font.h"
 #include "gfx.h"
 #include "lcd.h"
 
@@ -277,18 +277,18 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 
 void display::print_text_v( int x, int y, unsigned int color, char* txt )
 {
-	char *cp, col;
-	uint8_t mask;
-	int k, j, i, index;
-	
-	
-	for( k=0, cp = txt; *cp != '\0'; cp++, k++ )
-	{
+    char unsigned *cp;
+    char col;
+    unsigned char mask;
+    int k, j, i, index;
+
+    for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
+    {
 		for( i = 0; i < 5; i++ ) // y
 		{
 			index = *cp-32;
 			if( *cp > 0xA0 ) index -= 32;
-			col = Ascii_1[ index ][i];
+			col = Latin1[ index ][i];
 			mask = 1;
 			for( j = 0; j < 8; j++ ) // x
 			{
@@ -302,18 +302,18 @@ void display::print_text_v( int x, int y, unsigned int color, char* txt )
 
 void display::print_text_h( int x, int y, unsigned int color, char* txt )
 {
-	char *cp, col;
-	uint8_t mask;
-	int k, j, i, index;
-	
-	
-	for( k=0, cp = txt; *cp != '\0'; cp++, k++ )
-	{
+    char unsigned *cp;
+    char col;
+    unsigned char mask;
+    int k, j, i, index;
+
+    for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
+    {
 		for( i = 0; i < 5; i++ ) // x
 		{
 			index = *cp-32;
 			if( *cp > 0xA0 ) index -= 32;
-			col = Ascii_1[ index ][i];
+			col = Latin1[ index ][i];
 			mask = 1;
 			for( j = 0; j < 8; j++ ) // y
 			{
