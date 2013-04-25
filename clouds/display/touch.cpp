@@ -74,7 +74,7 @@ void display::touch_calibrate()
 	bg_color.u = 0xFFFF;
 	
 	fill_rectangle( 0, 0, 240, 400, 0 );
-	print_text_v(115, 120, bg_color.u, 1,"Touch And Release Target");
+	print_text(115, 120, bg_color.u,1,1,"Touch And Release Target");
 	
 	aery::twi_select_slave( 0x4D );
 	

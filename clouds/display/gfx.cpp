@@ -275,69 +275,54 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	set_reg_lcd( 0x16, 0x10 );
 }
 
-void display::print_text_v( int x, int y, unsigned int color, int size, char* txt )
+void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, char* txt )
 {
-    char unsigned *cp;
-    short col;
-    unsigned short mask;
-    int k, j, i, s, h, index;
-
+    char unsigned *cp, mask, col;
+    int k, j, i, offset, index;
     for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
     {
+		switch(*cp) // fixes placement off some characters
+		{
+			case 'g':
+			case 'p':
+			case 'q':
+			case 'y':
+				offset = 1; break;
+			default: offset = 0; break;
+		}
+		
 		for( i = 0; i < 5; i++ ) // y
 		{
 			index = *cp-32;
-			if( *cp > 0xA0 ) index -= 32;
+			if( *cp > 0xA0 ) index -= 32; // the table lacks some characters
 			col = Latin1[ index ][i];
 			mask = 1;
-			for( j = 0; j < 9; j++ ) // x
+			for( j = 0; j < 8; j++ ) // x
 			{
 				if( mask & col )
-				{	
-					for(s=1; s<=(size); s++)
+				{
+					switch(mode)
 					{
-						for(h=1; h<=size; h++)
-						{
-							set_pixel( (x+(9*size))-(j*size)-s, y+h+(i*size)+(k*6*size),color );
-						}
+						case 1:
+							fill_rectangle( x+(8*size)-(j*size)-(offset*size), 
+											y+(i*size)+(k*6*size),
+											size,
+											size,
+											color );
+							break;
+						default:
+							fill_rectangle( x+(i*size)+(k*6*size), 
+											y+offset+(j*size),
+											size,
+											size,
+											color );
+							break;
 					}
+
 				}
 				mask<<=1;
 			}
 		}
-	}
-}
-
-void display::print_text_h( int x, int y, unsigned int color, int size, char* txt )
-{
-    char unsigned *cp;
-    short col;
-    unsigned short mask;
-    int k, j, i, s, h, index;
-
-    for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
-    {
-		for( i = 0; i < 5; i++ ) // x
-		{
-			index = *cp-32;
-			if( *cp > 0xA0 ) index -= 32;
-			col = Latin1[ index ][i];
-			mask = 1;
-			for( j = 0; j < 9; j++ ) // y
-			{
-				if( mask & col ) 
-				{
-					for(s=1; s<=(size); s++)
-					{
-						for(h=1; h<=size; h++)
-						{
-							set_pixel( x+s+(i*size)+(k*6*size), y+h+(j*size),color );
-						}
-					}
-				}
-				mask<<=1;
-			}
-		}		
 	}
 }
 

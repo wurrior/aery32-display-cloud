@@ -72,23 +72,18 @@ void set_pixel( unsigned int x,
 				unsigned int color
 				);
 /**
- *	\brief Prints text in vertical direction
+ * \brief Prints text on the screen
+ *
  */
-void print_text_v(	int x,
+void print_text(	int x,
 					int y,
 					unsigned int color,
 					int size,
+					unsigned char mode,
 					char* txt 
 				);
-/**
- *	\brief Prints text in horizontal direction
- */
-void print_text_h(	int x,
-					int y,
-					unsigned int color,
-					int size,
-					char* txt
-				);
+				
+
 /**
  *	\brief Draw a line on the screen
  *   line is drawn from (x1,y1) to (x2,y2)
