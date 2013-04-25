@@ -312,7 +312,7 @@ void display::print_text( int x, int y, unsigned int color, int size, unsigned c
 							break;
 						default:
 							fill_rectangle( x+(i*size)+(k*6*size), 
-											y+offset+(j*size),
+											y+(offset*size)+(j*size),
 											size,
 											size,
 											color );
