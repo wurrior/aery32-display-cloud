@@ -34,38 +34,21 @@
 #include "lcd.h"
 #include "bc.h"
 
-namespace display {
-	// store the current value for brightness:
-	char current_brightness = 32; 
-}
+namespace display {}
 
-void display::decrease_brightness( int steps )
-{
-	for( int i = 0; i < steps; i++ )
-	{
-		aery::gpio_set_pin_low( DISPLAY_LED );
-		aery::delay_us(1);
-		aery::gpio_set_pin_high( DISPLAY_LED );
-	}
-}
 
-char display::get_brightness_level( void )
+void display::set_brightness(char val)
 {
-	return current_brightness;
-}
+ 		aery::gpio_set_pin_low( DISPLAY_LED );
+		aery::delay_ms(1);		
 
-void display::increase_brightness( int steps )
-{
-	/* the controller only supports decreasing */
-	decrease_brightness( 32 - steps );
-}
-
-void display::set_brightness( char val )
-{
-	if( val > 32 ) val = 32;
-	if( val < 0 ) val = 0;
-	if( val < current_brightness )
-		display::decrease_brightness( current_brightness - val );
-	else if ( val > current_brightness )
-		display::decrease_brightness( 32 - (val - current_brightness) );
+  if(val <= 0) return;
+  if(val > 31) val = 31;
+  for(int i = 31; i >= val; i--)
+  {
+    			aery::gpio_set_pin_low( DISPLAY_LED );
+				__asm__("nop");
+				aery::gpio_set_pin_high( DISPLAY_LED );
+				__asm__("nop");
+  }
 }

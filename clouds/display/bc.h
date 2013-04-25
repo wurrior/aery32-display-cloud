@@ -42,25 +42,8 @@ namespace display {
  *	brightness back to 31.
  *	\param steps 
  */
-void decrease_brightness( int steps = 1 );
 
-/**
- *	\brief Increase background LED brightness
- *	\paran step
- */
-void increase_brightness( int steps = 1 );
-
-/**
- *	\brief Set brightness to certain value
- *	\param val From 0 (LED off) to 31 (full brightness).
- */
 void set_brightness( char val );
-
-/**
- *	\brief Returns current brightness value
- *	\return Current brightness level, a value from 0 to 31
- */
-char get_brightness_level(void);
 
 }
 
