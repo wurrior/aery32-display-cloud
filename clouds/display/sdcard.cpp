@@ -148,9 +148,9 @@ void mmc_init_spi(BYTE clk_div = 0xFF)
 inline char mmc_spi_transfer( char c )
 {
 	mmc_wait_pdca_finish(); // wait for spi line to be free
-	//uint timeOut = 0;
+	unsigned int tmr = 0;
 	aery::spi0->tdr = c;
-	while ( ((AVR32_SPI0.sr & AVR32_SPI_SR_RDRF_MASK) == 0) /*&& (++timeOut < 100000)*/ );
+	while ( ((AVR32_SPI0.sr & AVR32_SPI_SR_RDRF_MASK) == 0) && (++tmr < 100000) );
 	return aery::spi0->RDR.rd;
 }
 
@@ -172,7 +172,7 @@ int mmc_wait_ready(void)
 	return tmr ? 1 : 0; // 1=OK, 0=Timeout
 }
 
-/*
+/**
  * \brief deselect card
  */
 void mmc_deselect(void)
@@ -182,9 +182,9 @@ void mmc_deselect(void)
 	mmc_spi_transfer(0xFF); // I'm a dummy
 }
 
-/*
+/**
  * \brief Select card
- * returns 1 for OK & 0 for timeout
+ * \return 1 for OK & 0 for timeout
  */
 int mmc_select(void)	/*  */
 {

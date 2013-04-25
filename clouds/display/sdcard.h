@@ -34,12 +34,18 @@
 
 #include "fatfs/diskio.h"
 #include <avr32/io.h>			// avr32 platform headers
+
 #define mmc_wait_pdca_finish() while(AVR32_PDCA.channel[0].sr)
+#define CARD_DRIVE 0
 
 /**
  * \brief Send command to card
  */
 BYTE mmc_send_command ( BYTE cmd, DWORD arg );
+/**
+ *	\brief Send a data packet to the card
+ */
+int mmc_send_datablock ( const BYTE *buffer, BYTE token );
 /**
  * \brief Read datablock from the card
  */
