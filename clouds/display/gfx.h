@@ -77,6 +77,7 @@ void set_pixel( unsigned int x,
 void print_text_v(	int x,
 					int y,
 					unsigned int color,
+					int size,
 					char* txt 
 				);
 /**
@@ -85,6 +86,7 @@ void print_text_v(	int x,
 void print_text_h(	int x,
 					int y,
 					unsigned int color,
+					int size,
 					char* txt
 				);
 /**

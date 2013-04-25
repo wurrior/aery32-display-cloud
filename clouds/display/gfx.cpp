@@ -275,12 +275,12 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	set_reg_lcd( 0x16, 0x10 );
 }
 
-void display::print_text_v( int x, int y, unsigned int color, char* txt )
+void display::print_text_v( int x, int y, unsigned int color, int size, char* txt )
 {
     char unsigned *cp;
-    char col;
-    unsigned char mask;
-    int k, j, i, index;
+    short col;
+    unsigned short mask;
+    int k, j, i, s, h, index;
 
     for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
     {
@@ -290,22 +290,30 @@ void display::print_text_v( int x, int y, unsigned int color, char* txt )
 			if( *cp > 0xA0 ) index -= 32;
 			col = Latin1[ index ][i];
 			mask = 1;
-			for( j = 0; j < 8; j++ ) // x
+			for( j = 0; j < 9; j++ ) // x
 			{
-				if( mask & col ) set_pixel( x+8-j,y+i+(k*6),color );
+				if( mask & col )
+				{	
+					for(s=1; s<=(size); s++)
+					{
+						for(h=1; h<=size; h++)
+						{
+							set_pixel( (x+(9*size))-(j*size)-s, y+h+(i*size)+(k*6*size),color );
+						}
+					}
+				}
 				mask<<=1;
 			}
-			
 		}
 	}
 }
 
-void display::print_text_h( int x, int y, unsigned int color, char* txt )
+void display::print_text_h( int x, int y, unsigned int color, int size, char* txt )
 {
     char unsigned *cp;
-    char col;
-    unsigned char mask;
-    int k, j, i, index;
+    short col;
+    unsigned short mask;
+    int k, j, i, s, h, index;
 
     for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
     {
@@ -315,12 +323,20 @@ void display::print_text_h( int x, int y, unsigned int color, char* txt )
 			if( *cp > 0xA0 ) index -= 32;
 			col = Latin1[ index ][i];
 			mask = 1;
-			for( j = 0; j < 8; j++ ) // y
+			for( j = 0; j < 9; j++ ) // y
 			{
-				if( mask & col ) set_pixel( x+i+(k*6), y+j,color );
+				if( mask & col ) 
+				{
+					for(s=1; s<=(size); s++)
+					{
+						for(h=1; h<=size; h++)
+						{
+							set_pixel( x+s+(i*size)+(k*6*size), y+h+(j*size),color );
+						}
+					}
+				}
 				mask<<=1;
 			}
-			
 		}		
 	}
 }
