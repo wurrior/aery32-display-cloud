@@ -37,7 +37,7 @@
 namespace display {}
 
 
-void display::set_brightness(char val)
+void display::set_brightness(int val)
 {
  		aery::gpio_set_pin_low( DISPLAY_LED );
 		aery::delay_ms(1);		

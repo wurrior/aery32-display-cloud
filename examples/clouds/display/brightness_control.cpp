@@ -19,13 +19,19 @@ int main(void)
 	
 	for(;;) 
 	{	
-		for(int i=0; i<=31; i++)			
+	/*
+	You can put your desired brightness value, from 0 to 31, inside the set_brightness funtion.
+	0 is totally off an 31 is fully on.
+	Smaller numbers than 0 are interpreted as 0 and larger numbers than 31 are interpreted as 31 respectively.
+	*/
+	
+		for(int i=0; i<=31; i++)			//increase brightness gradually from 0 to 31
 		{								
-		display::set_brightness(i);		//You can put your desired value inside the set_brightness funtion, as long the value is between 0 and 31.
-		aery::delay_ms(100); 			//0 is totally off an 31 is fully on.
+		display::set_brightness(i);		
+		aery::delay_ms(100); 			
 		}
 		
-		for(int i=31; i>=0; i--)			
+		for(int i=31; i>=0; i--)			//decrese brightness gradually from 31 to 0
 		{
 		display::set_brightness(i);	
 		aery::delay_ms(100); 

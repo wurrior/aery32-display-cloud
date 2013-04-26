@@ -43,7 +43,7 @@ namespace display {
  *	\param steps 
  */
 
-void set_brightness( char val );
+void set_brightness( int val );
 
 }
 
