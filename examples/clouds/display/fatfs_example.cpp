@@ -9,7 +9,7 @@
 
 #include <aery32/all.h>
 #include "board.h"
-#include <clouds/display/display.h>
+#include <display/all.h>
 
 using namespace aery;
 

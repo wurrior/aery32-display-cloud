@@ -1,11 +1,17 @@
 /**
- *	\file udraw.cpp
- *	\brief uDraw is a simple example on how to accept and handle touch reports.
+ * \file udraw.cpp
+ * \date 2013-4-27
+ * \brief uDraw is a simple example on how to accept and handle touch reports.
+ *
+ * \copyright
+ * Copyright (c) 2013, Stemlux Systems Ltd. All rights reserved.
+ * distributed under the New BSD license.
+ * See accompanying file LICENSE.txt
  */
 
 #include <aery32/all.h> // aery32 headers
 #include "board.h" // platform settings
-#include "clouds/display/display.h" // display headers
+#include <display/all.h> // display headers
 
 int main(void)
 {

@@ -50,7 +50,7 @@ EXCLUDE=
 SETTINGS=$(CURDIR)/settings.h
 
 # Additional include paths
-INCLUDES=aery32
+INCLUDES=aery32 clouds
 
 
 # ----------------------------------------------------------------------
