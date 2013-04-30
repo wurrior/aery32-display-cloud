@@ -162,15 +162,16 @@ void display::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigne
 void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned int color)	//Draw circle function, courtesy of MIT http://groups.csail.mit.edu/graphics/classes/6.837/F98/Lecture6/circle.html
     {
         int offset = 0;
-        int p = (5 - (radius+1*4))/4; 														
-		
+        int p = (5 - radius*4)/4; 	
+
 		display::set_pixel(y, x + radius, color);
 		display::set_pixel(y, x - radius, color);
 		display::set_pixel(y + radius, x, color);
 		display::set_pixel(y - radius, x, color);
-    
+		
         while (offset < radius) 
 		{
+			offset++;
             if (p < 0) p += 2*offset+1;
             else 
 			{
@@ -184,7 +185,7 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
 				display::set_pixel(y + offset, x - radius, color);
 				display::set_pixel(y - offset, x - radius, color);
 			} 
-			else if (offset < radius) 
+			if (offset < radius) 
 			{
 				display::set_pixel(y + offset, x + radius, color);
 				display::set_pixel(y - offset, x + radius, color);
@@ -195,8 +196,37 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
 				display::set_pixel(y + radius, x - offset, color);
 				display::set_pixel(y - radius, x - offset, color);
 			}
-		offset++;
 		}
+    }
+	
+void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned int color)	
+    {
+        int offset = 0;
+        int p = (5 - radius*4)/4; 	
+		
+		display::set_pixel(y, x + radius, color);
+		display::set_pixel(y, x - radius, color);
+		display::set_pixel(y + radius, x, color);
+		display::set_pixel(y - radius, x, color);
+		
+        while (offset < radius) 
+		{
+			offset++;
+            if (p < 0) p += 2*offset+1;
+            else 
+			{
+                radius--;
+                p += 2*(offset-radius)+1;
+            }
+			if (offset < radius) 
+			{
+				display::draw_line(y + offset, x + radius, y - offset, x + radius, color);
+				display::draw_line(y + offset, x - radius, y - offset, x - radius, color);
+				display::draw_line(y + radius, x + offset, y + radius, x - offset, color);
+				display::draw_line(y - radius, x - offset, y - radius, x + offset, color);
+			}
+		}
+		display::fill_rectangle(y - radius, x - offset, radius+radius+1, offset+offset+1, color);
     }
 
 void display::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )

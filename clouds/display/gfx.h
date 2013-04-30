@@ -85,6 +85,17 @@ void draw_circle(	unsigned int x, // center point x
 					int radius, //  circle radius
 					unsigned int color
 				);
+				
+/**
+ *	\brief Fill a circle on the screen
+ *   circle center point is (x,y) 
+ */		
+void fill_circle(	unsigned int x, // center point x
+					unsigned int y, // center point y
+					int radius, //  circle radius
+					unsigned int color
+				);
+				
 /**
  *	\brief Draw and fill a rectangle with the specified color
  */
