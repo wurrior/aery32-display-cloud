@@ -159,6 +159,46 @@ void display::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigne
     }
 }
 
+void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned int color)	//Draw circle function, courtesy of MIT http://groups.csail.mit.edu/graphics/classes/6.837/F98/Lecture6/circle.html
+    {
+        int offset = 0;
+        int p = (5 - (radius+1*4))/4; 														
+		
+		display::set_pixel(y, x + radius, color);
+		display::set_pixel(y, x - radius, color);
+		display::set_pixel(y + radius, x, color);
+		display::set_pixel(y - radius, x, color);
+    
+        while (offset < radius) 
+		{
+            if (p < 0) p += 2*offset+1;
+            else 
+			{
+                radius--;
+                p += 2*(offset-radius)+1;
+            }
+			if (offset == radius) 
+			{
+				display::set_pixel(y + offset, x + radius, color);
+				display::set_pixel(y - offset, x + radius, color);
+				display::set_pixel(y + offset, x - radius, color);
+				display::set_pixel(y - offset, x - radius, color);
+			} 
+			else if (offset < radius) 
+			{
+				display::set_pixel(y + offset, x + radius, color);
+				display::set_pixel(y - offset, x + radius, color);
+				display::set_pixel(y + offset, x - radius, color);
+				display::set_pixel(y - offset, x - radius, color);
+				display::set_pixel(y + radius, x + offset, color);
+				display::set_pixel(y - radius, x + offset, color);
+				display::set_pixel(y + radius, x - offset, color);
+				display::set_pixel(y - radius, x - offset, color);
+			}
+		offset++;
+		}
+    }
+
 void display::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )
 {
 	unsigned int bytesRead = 0, k = 0, offset = 0, pixel = 0;
