@@ -68,6 +68,14 @@ void display::set_pixel( unsigned int x, unsigned int y, unsigned int color )
 	// set color
 	set_reg_lcd( 0x22, color );
 }
+void display::draw_rectangle(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color)
+{
+	display::fill_rectangle(x, y, 1, height, color);
+	display::fill_rectangle(x, y, width, 1, color);
+	display::fill_rectangle(x+width-1, y, 1, height, color);
+	display::fill_rectangle(x, y+height-1, width, 1, color);
+
+}
 
 void display::fill_rectangle( unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color )
 {
@@ -162,7 +170,7 @@ void display::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigne
 void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned int color)	//Draw circle function, courtesy of MIT http://groups.csail.mit.edu/graphics/classes/6.837/F98/Lecture6/circle.html
     {
         int offset = 0;
-        int p = (5 - radius*4)/4; 	
+        int p = (5 - (radius<<2))>>2; 	
 
 		display::set_pixel(y, x + radius, color);
 		display::set_pixel(y, x - radius, color);
@@ -172,11 +180,11 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
         while (offset < radius) 
 		{
 			offset++;
-            if (p < 0) p += 2*offset+1;
+            if (p < 0) p += (offset<<1)+1;
             else 
 			{
                 radius--;
-                p += 2*(offset-radius)+1;
+                p += ((offset-radius)<<1)+1;
             }
 			if (offset == radius) 
 			{
@@ -202,7 +210,7 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
 void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned int color)	
     {
         int offset = 0;
-        int p = (5 - radius*4)/4; 	
+        int p = (5 - (radius<<2))>>2; 	
 		
 		display::set_pixel(y, x + radius, color);
 		display::set_pixel(y, x - radius, color);
@@ -212,11 +220,11 @@ void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned i
         while (offset < radius) 
 		{
 			offset++;
-            if (p < 0) p += 2*offset+1;
+            if (p < 0) p += (offset<<1)+1;
             else 
 			{
                 radius--;
-                p += 2*(offset-radius)+1;
+                p += ((offset-radius)<<1)+1;
             }
 			if (offset < radius) 
 			{

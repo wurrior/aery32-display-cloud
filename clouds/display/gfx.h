@@ -97,6 +97,15 @@ void fill_circle(	unsigned int x, // center point x
 				);
 				
 /**
+ *	\brief Draw a rectangle with the specified color
+ */
+void draw_rectangle(	unsigned int x,
+						unsigned int y,
+						unsigned int width,
+						unsigned int height,
+						unsigned int color
+					);
+/**
  *	\brief Draw and fill a rectangle with the specified color
  */
 void fill_rectangle(	unsigned int x,
