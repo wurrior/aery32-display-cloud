@@ -77,6 +77,11 @@ void area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int y
  *	\brief Set RAM access area to default size (full screen)
  */
 void area_reset();
+/**
+ * \brief Sets screen orientation
+ * \param mode
+ */
+void set_orientation( unsigned char mode );
 
 } /* end of namespace display */
 

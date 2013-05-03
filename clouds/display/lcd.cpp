@@ -15,8 +15,6 @@
 #include "lcd.h"
 #include "gfx.h"
 
-extern bool buttonPressed; // indicates a tap on the screen
-
 #ifdef DISPLAY_32
 
 /* 
@@ -27,9 +25,10 @@ extern bool buttonPressed; // indicates a tap on the screen
 */
 unsigned int write_area_x_begin = 0,
 write_area_y_begin = 0,
-write_area_x_end = 240,
-write_area_y_end = 400;
+write_area_x_end = 0,
+write_area_y_end = 0;
 
+bool landscape = false;
 
 int display::read_reg_lcd( unsigned short reg )
 {
@@ -106,18 +105,7 @@ void display::lcd_init( void )
 	set_reg_lcd( 0x91, 0x01 );
 	
 	//RAM SETTINGS:
-	set_reg_lcd(0x16, 0x00);
-	set_reg_lcd(0x2, 0);
-	set_reg_lcd(0x3, 0);
-	
-	set_reg_lcd(0x4,0);
-	set_reg_lcd(0x5,0xF0);
-	
-	set_reg_lcd(0x6, 0);
-	set_reg_lcd(0x7, 0);	
-	
-	set_reg_lcd( 0x8, 0x01 ); // ram vertical end 399
-	set_reg_lcd( 0x9, 0x90 );
+	set_orientation( 2 );
 	
 	// LED on
 	aery::gpio_set_pin_high( DISPLAY_LED );
@@ -128,41 +116,65 @@ void display::lcd_init( void )
 
 void display::area_reset()
 {
-	area_set( 0, 0, 239, 399 );
+	if( landscape ) area_set( 0, 0, 399, 239 );
+	else area_set( 0, 0, 239, 399 );
 }
 
 void display::area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
 {
-		// move ram pointer if needed
-		if( write_area_x_begin != xb )
-		{
-			set_reg_lcd( 0x02, 0 );
-			set_reg_lcd( 0x03, xb );
-			write_area_x_begin = xb;
-		}
-		
-		if ( write_area_y_begin != yb )
-		{
-			set_reg_lcd( 0x06, (yb>>8) );
-			set_reg_lcd( 0x07, yb );
-			write_area_y_begin = yb;
-		}
-		
-		if( write_area_x_end != xe )
-		{
-			set_reg_lcd( 0x04, 0 );
-			set_reg_lcd( 0x05, xe);
-			write_area_x_end = xe;
-		}
-		
-		if( write_area_y_end != ye )
-		{
-			set_reg_lcd( 0x08, (ye)>>8 );
-			set_reg_lcd( 0x09, (ye) );
-			write_area_y_end = ye;
-		}
+	// move ram pointer if needed
+	if( write_area_x_begin != xb )
+	{
+		set_reg_lcd( 0x02, (xb>>8) );
+		set_reg_lcd( 0x03, xb );
+		write_area_x_begin = xb;
+	}
+	
+	if ( write_area_y_begin != yb )
+	{
+		set_reg_lcd( 0x06, (yb>>8) );
+		set_reg_lcd( 0x07, yb );
+		write_area_y_begin = yb;
+	}
+	
+	if( write_area_x_end != xe )
+	{
+		set_reg_lcd( 0x04, (xe>>8) );
+		set_reg_lcd( 0x05, xe);
+		write_area_x_end = xe;
+	}
+	
+	if( write_area_y_end != ye )
+	{
+		set_reg_lcd( 0x08, (ye)>>8 );
+		set_reg_lcd( 0x09, (ye) );
+		write_area_y_end = ye;
+	}
 }
 
-
+void display::set_orientation( unsigned char mode )
+{
+	//Ram access settings:
+	switch(mode) 
+	{
+		case 1:
+			set_reg_lcd(0x16, 0xC0);
+			landscape = false;
+			break;
+		case 2:
+			set_reg_lcd(0x16, 0xA0);
+			landscape = true;
+			break;
+		case 3:
+			set_reg_lcd(0x16, 0x60);
+			landscape = true;
+			break;
+		default:
+			set_reg_lcd(0x16, 0x00);
+			landscape = false;
+			break;
+	}
+	area_reset();
+}
 
 #endif
