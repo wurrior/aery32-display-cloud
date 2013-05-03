@@ -98,7 +98,7 @@ void display::lcd_init( void )
 	aery::delay_ms(150);
 
 	//DISPLAY SETTINGS
-	set_reg_lcd( 0x55, 0x07 ); //RGB and Frame inversion (Panel Control register)
+	set_reg_lcd( 0x55, 0x0F ); //RGB and Frame inversion (Panel Control register)
 	set_reg_lcd( 0x3A, 0xC0 );
 	set_reg_lcd( 0x3C, 0xFF ); // nsap
 	set_reg_lcd( 0x3D, 0xFF ); // isap
@@ -106,7 +106,7 @@ void display::lcd_init( void )
 	set_reg_lcd( 0x91, 0x01 );
 	
 	//RAM SETTINGS:
-	set_reg_lcd(0x16, 0x80);
+	set_reg_lcd(0x16, 0x00);
 	set_reg_lcd(0x2, 0);
 	set_reg_lcd(0x3, 0);
 	

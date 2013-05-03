@@ -172,10 +172,10 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
         int offset = 0;
         int p = (5 - (radius<<2))>>2; 	
 
-		display::set_pixel(y, x + radius, color);
-		display::set_pixel(y, x - radius, color);
-		display::set_pixel(y + radius, x, color);
-		display::set_pixel(y - radius, x, color);
+		display::set_pixel(x, y + radius, color);
+		display::set_pixel(x, y - radius, color);
+		display::set_pixel(x + radius, y, color);
+		display::set_pixel(x - radius, y, color);
 		
         while (offset < radius) 
 		{
@@ -188,21 +188,21 @@ void display::draw_circle(unsigned int x, unsigned int y, int radius, unsigned i
             }
 			if (offset == radius) 
 			{
-				display::set_pixel(y + offset, x + radius, color);
-				display::set_pixel(y - offset, x + radius, color);
-				display::set_pixel(y + offset, x - radius, color);
-				display::set_pixel(y - offset, x - radius, color);
+				display::set_pixel(x + offset, y + radius, color);
+				display::set_pixel(x - offset, y + radius, color);
+				display::set_pixel(x + offset, y - radius, color);
+				display::set_pixel(x - offset, y - radius, color);
 			} 
 			if (offset < radius) 
 			{
-				display::set_pixel(y + offset, x + radius, color);
-				display::set_pixel(y - offset, x + radius, color);
-				display::set_pixel(y + offset, x - radius, color);
-				display::set_pixel(y - offset, x - radius, color);
-				display::set_pixel(y + radius, x + offset, color);
-				display::set_pixel(y - radius, x + offset, color);
-				display::set_pixel(y + radius, x - offset, color);
-				display::set_pixel(y - radius, x - offset, color);
+				display::set_pixel(x + offset, y + radius, color);
+				display::set_pixel(x - offset, y + radius, color);
+				display::set_pixel(x + offset, y - radius, color);
+				display::set_pixel(x - offset, y - radius, color);
+				display::set_pixel(x + radius, y + offset, color);
+				display::set_pixel(x - radius, y + offset, color);
+				display::set_pixel(x + radius, y - offset, color);
+				display::set_pixel(x - radius, y - offset, color);
 			}
 		}
     }
@@ -212,10 +212,10 @@ void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned i
         int offset = 0;
         int p = (5 - (radius<<2))>>2; 	
 		
-		display::set_pixel(y, x + radius, color);
-		display::set_pixel(y, x - radius, color);
-		display::set_pixel(y + radius, x, color);
-		display::set_pixel(y - radius, x, color);
+		display::set_pixel(x, y + radius, color);
+		display::set_pixel(x, y - radius, color);
+		display::set_pixel(x + radius, y, color);
+		display::set_pixel(x - radius, y, color);
 		
         while (offset < radius) 
 		{
@@ -228,13 +228,13 @@ void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned i
             }
 			if (offset < radius) 
 			{
-				display::draw_line(y + offset, x + radius, y - offset, x + radius, color);
-				display::draw_line(y + offset, x - radius, y - offset, x - radius, color);
-				display::draw_line(y + radius, x + offset, y + radius, x - offset, color);
-				display::draw_line(y - radius, x - offset, y - radius, x + offset, color);
+				display::draw_line(x + offset, y + radius, x - offset, y + radius, color);
+				display::draw_line(x + offset, y - radius, x - offset, y - radius, color);
+				display::draw_line(x + radius, y + offset, x + radius, y - offset, color);
+				display::draw_line(x - radius, y - offset, x - radius, y + offset, color);
 			}
 		}
-		display::fill_rectangle(y - radius, x - offset, radius+radius+1, offset+offset+1, color);
+		display::fill_rectangle(x - radius, y - offset, radius+radius+1, offset+offset+1, color);
     }
 
 void display::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )
@@ -331,7 +331,7 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	
 	rc = f_close(&file);
 	area_reset();
-	set_reg_lcd( 0x16, 0x10 );
+	set_reg_lcd( 0x16, 0x00 );
 }
 
 void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, char* txt )
