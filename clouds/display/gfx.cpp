@@ -44,7 +44,7 @@ void display::test_image()
 	}
 	for (i = 0; i < 12000; i++)
 	{
-		send_data_lcd( GREEN | BLUE );
+		send_data_lcd( (GREEN | BLUE) );
 	}
 	for (i = 0; i < 12000; i++)
 	{
@@ -52,7 +52,7 @@ void display::test_image()
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( RED | BLUE );
+	send_data_lcd( (RED | BLUE) );
 	}
 	for (i = 0; i < 12000; i++)
 	{
@@ -243,7 +243,7 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	bool first = true, rgb1555 = false;
 	FIL file;
 	FRESULT rc;
-	int bitsPerPixel = 0, rowSize = 0, rowDataSize = 0, bmpWidth, bmpHeight, padding, rowByteCounter = 0;
+	int bitsPerPixel = 0, rowSize = 0, rowDataSize = 0, bmpWidth, bmpHeight, padding=0, rowByteCounter = 0;
 	// buffer needs to be divisible by 3 because pixels 3 byte long.
 	unsigned int buffersize = GFX_BUFFER_SIZE-(GFX_BUFFER_SIZE%3);
 	
@@ -311,11 +311,11 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 			while( k < bytesRead-2 )
 			{
 				pixel = (ImageBuffer[ k+2 ]<<16) | (ImageBuffer[ k+1 ]<<8) | (ImageBuffer[ k ]);
-				send_data_lcd_fast(
+				send_data_lcd_fast((
 				((pixel&0xF80000)>>8) |
 				((pixel&0x00FC00)>>5) |
 				((pixel&0x0000FF)>>3)
-				);
+				));
 				rowByteCounter += 3;
 				if( rowByteCounter >= rowSize ) // new row
 				{
@@ -334,7 +334,7 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	set_reg_lcd( 0x16, 0x00 );
 }
 
-void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, char* txt )
+void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, const char* txt )
 {
     char unsigned *cp, mask, col;
     int k, j, i, offset, index;

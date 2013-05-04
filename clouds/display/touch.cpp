@@ -51,11 +51,11 @@ void display::touch_calibrate()
 {
 	touch_disable();
 	
-	color16_t cross_color, bg_color;
-	bg_color.u = 0xFFFF;
+	color16_t cross_color;
+	cross_color.u = 0xFFFF;
 	
 	fill_rectangle( 0, 0, 240, 400, 0 );
-	print_text(115, 120, bg_color.u,1,1,"Touch And Release Target");
+	print_text(115, 120, cross_color.u,1,1,"Touch And Release Target");
 	
 	aery::twi_select_slave( 0x4D );
 	
@@ -76,23 +76,23 @@ void display::touch_calibrate()
 	while( (arr[2]!=0) || (arr[3] != 0x14) );
 
 	// upper left corner
-	draw_line(20,50,40,50,bg_color.u);
-	draw_line(30,40,30,60,bg_color.u);
+	draw_line(20,50,40,50,cross_color.u);
+	draw_line(30,40,30,60,cross_color.u);
 	checkpoint(); // first point
 
 	// upper right corner
-	draw_line(200,50,220,50,bg_color.u);
-	draw_line(210,40,210,60,bg_color.u);
+	draw_line(200,50,220,50,cross_color.u);
+	draw_line(210,40,210,60,cross_color.u);
 	checkpoint(); // 2nd point
 
 	// lower left corner
-	draw_line(200,350,220,350,bg_color.u);
-	draw_line(210,340,210,360,bg_color.u);
+	draw_line(200,350,220,350,cross_color.u);
+	draw_line(210,340,210,360,cross_color.u);
 	checkpoint(); //3rd point
 
 	// lower right corner
-	draw_line(20,350,40,350,bg_color.u);
-	draw_line(30,340,30,360,bg_color.u);
+	draw_line(20,350,40,350,cross_color.u);
+	draw_line(30,340,30,360,cross_color.u);
 	checkpoint(); //4th point
 
 	checkpoint();// eeprom ready

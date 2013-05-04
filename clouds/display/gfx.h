@@ -61,7 +61,7 @@ void print_text(	int x,
 					unsigned int color,
 					int size,
 					unsigned char mode,
-					char* txt 
+					const char* txt 
 				);
 				
 
