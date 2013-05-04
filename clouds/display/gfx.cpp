@@ -16,8 +16,10 @@
 #include "font.h"
 #include "gfx.h"
 #include "lcd.h"
+#include "sdcard.h"
 
 BYTE ImageBuffer[GFX_BUFFER_SIZE];
+extern unsigned char screen_orientation;
 
 void display::test_image()
 {
@@ -34,11 +36,11 @@ void display::test_image()
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( RED );
+        send_data_lcd( RED );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( YELLOW );
+        send_data_lcd( YELLOW );
 	}
 	for (i = 0; i < 12000; i++)
 	{
@@ -54,11 +56,11 @@ void display::test_image()
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( (RED | BLUE) );
+		send_data_lcd( (RED | BLUE) );
 	}
 	for (i = 0; i < 12000; i++)
 	{
-	send_data_lcd( WHITE );
+		send_data_lcd( WHITE );
 	}			
 	
 	aery::gpio_set_pin_high( CS );
@@ -67,9 +69,9 @@ void display::test_image()
 void display::set_pixel( unsigned int x, unsigned int y, unsigned int color )
 {
 	area_set(x,y,x,y);
-	// set color
 	set_reg_lcd( 0x22, color );
 }
+
 void display::draw_rectangle(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color)
 {
 	display::fill_rectangle(x, y, 1, height, color);
@@ -81,21 +83,21 @@ void display::draw_rectangle(unsigned int x, unsigned int y, unsigned int width,
 
 void display::fill_rectangle( unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int color )
 {
-	area_set( x, y, x+width-1, y+height-1 );
-		
+	enable_fast_transfer();
+	area_set( x, y, x+width-1, y+height-1 );	
 	aery::gpio_set_pin_low( CS );
 	aery::gpio_set_pin_low( RS ); // write to register
-	send_data_lcd( 0x22 );
+	send_data_lcd_fast( 0x22 );
 	aery::gpio_set_pin_high( RS ); // write to data
 
 	unsigned int i, len = height * width;
 	for (i = 0; i < len; i++)
 	{
-		send_data_lcd( color );
+		send_data_lcd_fast( color );
 	}
 	
 	area_reset();
-	
+	disable_fast_transfer();
 }
 
 void display::draw_line( unsigned int x1,unsigned int y1,unsigned int x2,unsigned int y2, unsigned int color )
@@ -239,26 +241,47 @@ void display::fill_circle(unsigned int x, unsigned int y, int radius, unsigned i
 		display::fill_rectangle(x - radius, y - offset, radius+radius+1, offset+offset+1, color);
     }
 
-void display::show_image( unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *path )
+void display::show_image( unsigned int x,
+		unsigned int y,
+		unsigned int width,
+		unsigned int height,
+		const char *path )
 {
 	unsigned int bytesRead = 0, k = 0, offset = 0, pixel = 0;
 	bool first = true, rgb1555 = false;
-	FIL file;
+	
+    FATFS fs;
+    FIL file;
 	FRESULT rc;
-	int bitsPerPixel = 0, rowSize = 0, rowDataSize = 0, bmpWidth, bmpHeight, padding=0, rowByteCounter = 0;
+	int bitsPerPixel = 0,
+			rowSize = 0,
+			rowDataSize = 0,
+			bmpWidth,
+			bmpHeight,
+			padding=0,
+			rowByteCounter = 0;
 	// buffer needs to be divisible by 3 because pixels 3 byte long.
 	unsigned int buffersize = GFX_BUFFER_SIZE-(GFX_BUFFER_SIZE%3);
 	
+    rc = f_mount(CARD_DRIVE, &fs);
 	rc = f_open( &file, path, FA_READ );
 	
-	set_reg_lcd( 0x16, 0x90 );
-	area_set( x, 400-(y+height), x+width-1, 400-y-1 );	
+	if( (screen_orientation&0x20) ) // landscape
+	{
+		set_reg_lcd( 0x16, (screen_orientation^0x40) );
+		area_set( x, 240-y-height, x+width-1, 240-y-1 );
+	}
+	else // portrait
+	{
+		set_reg_lcd( 0x16, (screen_orientation^0x80) );	
+		area_set( x, 400-y-height, x+width-1, 400-y-1 );
+	}
 	
 	aery::gpio_set_pin_low( CS );
 	aery::gpio_set_pin_low( RS ); // write to register
 	send_data_lcd( 0x22 );
 	aery::gpio_set_pin_high( RS ); // write to data
-	int j =0;
+	int j = 0;
 	while( !f_read( &file, ImageBuffer, buffersize, &bytesRead ) )
 	{
 		if( bytesRead == 0  ) break; //eof
@@ -275,7 +298,7 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 			offset <<= 8;
 			offset |= ImageBuffer[0xA];
 			
-			rgb1555 = ( offset < 0x40 );
+			rgb1555 = (ImageBuffer[0x37]!=0xF8);
 			
 			bmpWidth = ImageBuffer[0x12];
 			bmpHeight = ImageBuffer[0x16];
@@ -291,49 +314,49 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 		{
 			case 8:
 				// not implemented yet
-			break;
+				break;
 			case 16:
-			for(k=offset; k < bytesRead-1; k+=2,rowByteCounter+=2, j++)
-			{
-				if( rowByteCounter == rowDataSize ) // end of row
+				for(k=offset; k < bytesRead-1; k+=2,rowByteCounter+=2, j++)
 				{
-					j=0;
-					rowByteCounter = 0;
-					k += padding;
+					if( rowByteCounter == rowDataSize ) // end of row
+					{
+						j=0;
+						rowByteCounter = 0;
+						k += padding;
+					}
+					pixel = 0 | (ImageBuffer[ k+1 ])<<8 | (ImageBuffer[ k ]);
+					if(rgb1555) pixel = ((pixel&0x7C00)<<1) |
+										((pixel&0x3E0)<<1) |
+										((pixel&0x1F));
+					send_data_lcd_fast( pixel );
 				}
-				pixel = 0 | (ImageBuffer[ k+1 ])<<8 | (ImageBuffer[ k ]);
-				if(rgb1555) pixel = ((pixel&0x7C00)<<1) |
-									((pixel&0x3E0)<<1) |
-									((pixel&0x1F));
-				send_data_lcd_fast( pixel );
-			}
-			break;
+				break;
 			case 24:
-			k = offset;
-			while( k < bytesRead-2 )
-			{
-				pixel = (ImageBuffer[ k+2 ]<<16) | (ImageBuffer[ k+1 ]<<8) | (ImageBuffer[ k ]);
-				send_data_lcd_fast((
-				((pixel&0xF80000)>>8) |
-				((pixel&0x00FC00)>>5) |
-				((pixel&0x0000FF)>>3)
-				));
-				rowByteCounter += 3;
-				if( rowByteCounter >= rowSize ) // new row
+				k = offset;
+				while( k < bytesRead-2 )
 				{
-					rowByteCounter = 0;
-					k+=padding;
+					pixel = (ImageBuffer[ k+2 ]<<16) | (ImageBuffer[ k+1 ]<<8) | (ImageBuffer[ k ]);
+					send_data_lcd_fast((
+					((pixel&0xF80000)>>8) |
+					((pixel&0x00FC00)>>5) |
+					((pixel&0x0000FF)>>3)
+					));
+					rowByteCounter += 3;
+					if( rowByteCounter >= rowSize ) // new row
+					{
+						rowByteCounter = 0;
+						k+=padding;
+					}
+					k +=3;
 				}
-				k +=3;
-			}
-			break;
+				break;
 		}
 		disable_fast_transfer();	
 	}
 	
 	rc = f_close(&file);
 	area_reset();
-	set_reg_lcd( 0x16, 0x00 );
+	set_reg_lcd( 0x16, screen_orientation );	
 }
 
 void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, const char* txt, ... )

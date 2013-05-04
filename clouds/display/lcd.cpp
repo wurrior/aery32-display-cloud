@@ -15,8 +15,6 @@
 #include "lcd.h"
 #include "gfx.h"
 
-#ifdef DISPLAY_32
-
 /* 
 	The display driver chip has a bug that does not allow updating the 
 	memory access registers with the same values already in them.
@@ -28,7 +26,7 @@ write_area_y_begin = 0,
 write_area_x_end = 0,
 write_area_y_end = 0;
 
-bool landscape = false;
+unsigned char screen_orientation = 0x02;
 
 int display::read_reg_lcd( unsigned short reg )
 {
@@ -116,8 +114,8 @@ void display::lcd_init( void )
 
 void display::area_reset()
 {
-	if( landscape ) area_set( 0, 0, 399, 239 );
-	else area_set( 0, 0, 239, 399 );
+	if( (screen_orientation&0x20) ) area_set( 0, 0, 399, 239 ); // landscape
+	else area_set( 0, 0, 239, 399 ); // portrait
 }
 
 void display::area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
@@ -158,23 +156,18 @@ void display::set_orientation( unsigned char mode )
 	switch(mode) 
 	{
 		case 1:
-			set_reg_lcd(0x16, 0xC0);
-			landscape = false;
+			screen_orientation = 0xC0;
 			break;
 		case 2:
-			set_reg_lcd(0x16, 0xA0);
-			landscape = true;
+			screen_orientation = 0xA0;
 			break;
 		case 3:
-			set_reg_lcd(0x16, 0x60);
-			landscape = true;
+			screen_orientation = 0x60;
 			break;
 		default:
-			set_reg_lcd(0x16, 0x00);
-			landscape = false;
+			screen_orientation = 0x00;
 			break;
 	}
+	set_reg_lcd(0x16, screen_orientation);
 	area_reset();
 }
-
-#endif
