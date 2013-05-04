@@ -11,6 +11,8 @@
  */
 
 #include <aery32/gpio.h>
+#include <stdio.h>
+#include <stdarg.h>
 #include "font.h"
 #include "gfx.h"
 #include "lcd.h"
@@ -334,11 +336,17 @@ void display::show_image( unsigned int x, unsigned int y, unsigned int width, un
 	set_reg_lcd( 0x16, 0x00 );
 }
 
-void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, const char* txt )
+void display::print_text( int x, int y, unsigned int color, int size, unsigned char mode, const char* txt, ... )
 {
     char unsigned *cp, mask, col;
+	char buffer[256];
+	va_list args;
+	va_start (args, txt);
+	vsprintf (buffer, txt, args);
+	va_end( args );
+	
     int k, j, i, offset, index;
-    for( k=0, cp =(unsigned char *) txt; *cp != '\0'; cp++, k++ )
+    for( k=0, cp =(unsigned char *) buffer; *cp != '\0'; cp++, k++ )
     {
 		switch(*cp) // fixes placement off some characters
 		{
