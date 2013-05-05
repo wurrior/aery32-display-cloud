@@ -19,9 +19,9 @@ int main(void)
 
 	display::lcd_init(); // initializes lcd panel
 
-	/* Empty the display by filling a 240x400px rectangle with 
+	/* Empty the display by filling a 400x240px rectangle with 
 	white(color code: 0xFFFF): */
-	display::fill_rectangle(0,0,240,400,0xFFFF);
+	display::fill_rectangle(0,0,400,240,0xFFFF);
 	
 	for(;;) 
 	{	

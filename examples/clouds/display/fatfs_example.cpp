@@ -50,7 +50,7 @@ int main(void)
 	/* Read from file and print it on screen: */
 	f_read( &text_file, output_buffer, 8, &bc );
 	
-	display::fill_rectangle(0,0,240,400,BLACK); // background
+	display::fill_rectangle(0,0,400,240,BLACK); // background
 	display::print_text(0,0,WHITE,4,output_buffer); // print
 	
 	/* Close the file: */
