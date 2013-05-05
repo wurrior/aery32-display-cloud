@@ -17,6 +17,8 @@
 #include "lcd.h"
 #include "gfx.h"
 
+extern unsigned char screen_orientation;
+
 namespace display // private functions
 {
 	unsigned char buffer[5];
@@ -50,12 +52,12 @@ void display::touch_init()
 void display::touch_calibrate()
 {
 	touch_disable();
-	
+	lcd_set_reg(0x16,0x00);
 	color16_t cross_color;
 	cross_color.u = 0xFFFF;
 	
 	fill_rectangle( 0, 0, 240, 400, 0 );
-	print_text(115, 120, cross_color.u,1,"Touch And Release Target");
+	print_text(50, 200, cross_color.u,1,"Touch And Release Target");
 	
 	aery::twi_select_slave( 0x4D );
 	
@@ -96,6 +98,7 @@ void display::touch_calibrate()
 	checkpoint(); //4th point
 
 	checkpoint();// eeprom ready
+	lcd_set_reg(0x16,screen_orientation);
 }
 
 void display::touch_enable()
@@ -167,8 +170,24 @@ void display::touch_set_reg( int reg, int val )
  {
 	touch_t touch;
 	aery::twi_read_nbytes( buffer, 5 );
-	touch.x = ((buffer[1]>>2) | (buffer[2]<<5))/4.267;
-	touch.y = ((buffer[3]>>2) | (buffer[4]<<5))/2.56;
+	switch(screen_orientation) {
+		case 0x00:
+		touch.x = ((buffer[1]>>2) | (buffer[2]<<5))/4.267;
+		touch.y = ((buffer[3]>>2) | (buffer[4]<<5))/2.56;
+		break;
+		case 0xC0:
+		touch.x = 240 - ((buffer[1]>>2) | (buffer[2]<<5))/4.267;
+		touch.y = 400 - ((buffer[3]>>2) | (buffer[4]<<5))/2.56;
+			break;
+		case 0xA0:
+		touch.y = ((buffer[1]>>2) | (buffer[2]<<5))/4.267;
+		touch.x = 400-((buffer[3]>>2) | (buffer[4]<<5))/2.56;
+			break;
+		case 0x60:
+		touch.y = 240-((buffer[1]>>2) | (buffer[2]<<5))/4.267;
+		touch.x = ((buffer[3]>>2) | (buffer[4]<<5))/2.56;
+			break;
+	}
 	touch.penstate = (buffer[0] & 1);
 	return touch;
  }
