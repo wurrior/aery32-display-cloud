@@ -51,7 +51,7 @@ int main(void)
 	f_read( &text_file, output_buffer, 8, &bc );
 	
 	display::fill_rectangle(0,0,240,400,BLACK); // background
-	display::print_text(0,0,WHITE,5,1,output_buffer); // print
+	display::print_text(0,0,WHITE,4,output_buffer); // print
 	
 	/* Close the file: */
 	f_close( &text_file );

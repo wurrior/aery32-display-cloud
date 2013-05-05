@@ -24,111 +24,110 @@
 #define BLACK	0x0000
 #define WHITE	0xFFFF
 
-// Uncummend following line, you dont use FATFS:
+// Uncommend following line, you dont use FATFS:
 // #define NO_FATFS
 
 namespace display {
 
-typedef union // 16bit color
-{
-	unsigned int u;
-	struct
+	typedef union // 16bit color
 	{
-		unsigned int :  16;
-		unsigned int r : 5;
-		unsigned int g : 6;
-		unsigned int b : 5;	
-	} rgb;
-} color16_t;
+		unsigned int u;
 
-/**
- *	\brief Display colored stripes on the screen
- */
-void test_image( void );
-/**
- *	\brief Changes the color of the specified pixel
- */
-void set_pixel( unsigned int x,
-				unsigned int y,
-				unsigned int color
-				);
-/**
- * \brief Prints text on the screen
- *
- */
-void print_text(	int x,
-					int y,
-					unsigned int color,
-					int size,
-					unsigned char mode,
-					const char* txt,
-					...
-				);
-				
+		struct {
+			unsigned int : 16;
+			unsigned int r : 5;
+			unsigned int g : 6;
+			unsigned int b : 5;
+		} rgb;
+	} color16_t;
 
-/**
- *	\brief Draw a line on the screen
- *   line is drawn from (x1,y1) to (x2,y2)
- */
-void draw_line(	unsigned int x1, // start point x
-				unsigned int y1, // start point y
-				unsigned int x2, // end point x
-				unsigned int y2, // end point y
-				unsigned int color
-				);
-				
-/**
- *	\brief Draw a circle on the screen
- *   circle center point is (x,y) 
- */		
-void draw_circle(	unsigned int x, // center point x
-					unsigned int y, // center point y
-					int radius, //  circle radius
-					unsigned int color
-				);
-				
-/**
- *	\brief Fill a circle on the screen
- *   circle center point is (x,y) 
- */		
-void fill_circle(	unsigned int x, // center point x
-					unsigned int y, // center point y
-					int radius, //  circle radius
-					unsigned int color
-				);
-				
-/**
- *	\brief Draw a rectangle with the specified color
- */
-void draw_rectangle(	unsigned int x,
-						unsigned int y,
-						unsigned int width,
-						unsigned int height,
-						unsigned int color
-					);
-/**
- *	\brief Draw and fill a rectangle with the specified color
- */
-void fill_rectangle(	unsigned int x,
-						unsigned int y,
-						unsigned int width,
-						unsigned int height,
-						unsigned int color
-					);
+	/**
+	 *	\brief Display colored stripes on the screen
+	 */
+	void test_image(void);
+	/**
+	 *	\brief Changes the color of the specified pixel
+	 */
+	void set_pixel(unsigned int x,
+			unsigned int y,
+			unsigned int color
+			);
+	/**
+	 *	\brief Prints text on the screen
+	 *	Works almost like printf() in C
+	 */
+	void print_text(int x,
+			int y,
+			unsigned int color,
+			int size,
+			const char* txt,
+			...
+			);
+
+	/**
+	 *	\brief Draw a line on the screen
+	 *   line is drawn from (x1,y1) to (x2,y2)
+	 */
+	void draw_line(unsigned int x1, // start point x
+			unsigned int y1, // start point y
+			unsigned int x2, // end point x
+			unsigned int y2, // end point y
+			unsigned int color
+			);
+
+	/**
+	 *	\brief Draw a circle on the screen
+	 *   circle center point is (x,y) 
+	 */
+	void draw_circle(unsigned int x, // center point x
+			unsigned int y, // center point y
+			int radius, //  circle radius
+			unsigned int color
+			);
+
+	/**
+	 *	\brief Fill a circle on the screen
+	 *   circle center point is (x,y) 
+	 */
+	void fill_circle(unsigned int x, // center point x
+			unsigned int y, // center point y
+			int radius, //  circle radius
+			unsigned int color
+			);
+
+	/**
+	 *	\brief Draw a rectangle with the specified color
+	 */
+	void draw_rectangle(unsigned int x,
+			unsigned int y,
+			unsigned int width,
+			unsigned int height,
+			unsigned int color
+			);
+	/**
+	 *	\brief Draw and fill a rectangle with the specified color
+	 */
+	void fill_rectangle(unsigned int x,
+			unsigned int y,
+			unsigned int width,
+			unsigned int height,
+			unsigned int color
+			);
 #ifndef NO_FATFS
-/**
- *	\brief Displays an Windows BMP file on the screen.
- *	Supported formats:	16bit( x-5-5-5 and 5-6-5 )
-						24bit
- *	Currently no scaling is supported, so height and width have to match the
- *	files height and with. 
- */
-void show_image(	unsigned int x, 
-					unsigned int y, 
-					unsigned int width, 
-					unsigned int height, 
-					const char *path
-				);
+	/**
+	 *	\brief Displays an Windows BMP file on the screen.
+	 *	Supported formats:	8bit (uncompressed)
+	 *						16bit (x-5-5-5 and 5-6-5)
+	 *						24bit
+	 *	Currently no scaling is supported, so height and width have to match the
+	 *	files height and with. 
+	 */
+	void show_image(unsigned int x,
+			unsigned int y,
+			unsigned int width,
+			unsigned int height,
+			const char *path
+			);
 #endif
 
 } /* end of namespace display */
