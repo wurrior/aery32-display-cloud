@@ -53,6 +53,13 @@ namespace display {
 			unsigned int color
 			);
 	/**
+	 * \brief Read pixel from screen
+     * \param x
+     * \param y
+     * \return 
+     */
+	unsigned short read_pixel(unsigned int x, unsigned int y);
+	/**
 	 *	\brief Prints text on the screen
 	 *	Works almost like printf() in C
 	 */

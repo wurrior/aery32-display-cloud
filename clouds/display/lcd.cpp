@@ -28,7 +28,7 @@ write_area_y_end = 0;
 
 unsigned char screen_orientation = 0x02;
 
-int display::read_reg_lcd( unsigned short reg )
+int display::lcd_read_reg( unsigned short reg )
 {
 	unsigned short temp;
 	aery::gpio_set_pin_low( CS );
@@ -48,7 +48,7 @@ int display::read_reg_lcd( unsigned short reg )
 	return temp;
 }
 
-void display::set_reg_lcd( unsigned char add, unsigned short val )
+void display::lcd_set_reg( unsigned char add, unsigned short val )
 {	
 	aery::gpio_set_pin_low( CS );
 	aery::gpio_set_pin_low( RS ); // write to register
@@ -70,40 +70,40 @@ void display::lcd_init( void )
 	aery::delay_ms(10);
 	
 	//PANEL INTERFACE SETTINGS
-	set_reg_lcd( 0x17, 0x01 ); // clocks per line to min
-	set_reg_lcd( 0x2E, 0x00 );
-	set_reg_lcd( 0x2F, 0x00 );
-	set_reg_lcd( 0x30, 0x00 );
-	set_reg_lcd( 0x31, 0x00 );
-	set_reg_lcd( 0x32, 0x00 );
+	lcd_set_reg( 0x17, 0x01 ); // clocks per line to min
+	lcd_set_reg( 0x2E, 0x00 );
+	lcd_set_reg( 0x2F, 0x00 );
+	lcd_set_reg( 0x30, 0x00 );
+	lcd_set_reg( 0x31, 0x00 );
+	lcd_set_reg( 0x32, 0x00 );
 	
 	//set_reg_lcd( 0x23, 0x01 ); // Fmark (TE) On
 
 	// POWER SETTINGS:	
-	set_reg_lcd( 0x1A, 0x57 ); // pc2 bt-setting no 1
-	set_reg_lcd( 0x1B, 0x01 ); // pc3 1 x VCILVL
-	set_reg_lcd( 0x1C, 0x1E ); // pc4 PON? VREGOUT1 x 1.32
-	set_reg_lcd( 0x1D, 0x0F ); // pc5 VCIR x 1.6,
-	set_reg_lcd( 0x8A, 0x07 ); // Power driving reg
-	set_reg_lcd( 0x85, 0x07 );
+	lcd_set_reg( 0x1A, 0x57 ); // pc2 bt-setting no 1
+	lcd_set_reg( 0x1B, 0x01 ); // pc3 1 x VCILVL
+	lcd_set_reg( 0x1C, 0x1E ); // pc4 PON? VREGOUT1 x 1.32
+	lcd_set_reg( 0x1D, 0x0F ); // pc5 VCIR x 1.6,
+	lcd_set_reg( 0x8A, 0x07 ); // Power driving reg
+	lcd_set_reg( 0x85, 0x07 );
 	//set_reg( 0x58, 0x80 );
 	
-	set_reg_lcd( 0x1F, 0x75 ); // 75 vcom
-	set_reg_lcd( 0x19, 0x12 ); // PC1 PSON and PON
+	lcd_set_reg( 0x1F, 0x75 ); // 75 vcom
+	lcd_set_reg( 0x19, 0x12 ); // PC1 PSON and PON
 	aery::delay_ms(50);
-	set_reg_lcd( 0x1E, 0x36 ); // pc6
+	lcd_set_reg( 0x1E, 0x36 ); // pc6
 	aery::delay_ms(150);
 
 	//DISPLAY SETTINGS
-	set_reg_lcd( 0x55, 0x0F ); //RGB and Frame inversion (Panel Control register)
-	set_reg_lcd( 0x3A, 0xC0 );
-	set_reg_lcd( 0x3C, 0xFF ); // nsap
-	set_reg_lcd( 0x3D, 0xFF ); // isap
-	set_reg_lcd( 0x24, 0x3C ); // display enable
-	set_reg_lcd( 0x91, 0x01 );
+	lcd_set_reg( 0x55, 0x0F ); //RGB and Frame inversion (Panel Control register)
+	lcd_set_reg( 0x3A, 0xC0 );
+	lcd_set_reg( 0x3C, 0xFF ); // nsap
+	lcd_set_reg( 0x3D, 0xFF ); // isap
+	lcd_set_reg( 0x24, 0x3C ); // display enable
+	lcd_set_reg( 0x91, 0x01 );
 	
 	//RAM SETTINGS:
-	set_orientation( 2 );
+	lcd_set_orientation( 2 );
 	
 	// LED on
 	aery::gpio_set_pin_high( DISPLAY_LED );
@@ -112,45 +112,45 @@ void display::lcd_init( void )
 	test_image();
 }
 
-void display::area_reset()
+void display::lcd_area_reset()
 {
-	if( (screen_orientation&0x20) ) area_set( 0, 0, 399, 239 ); // landscape
-	else area_set( 0, 0, 239, 399 ); // portrait
+	if( (screen_orientation&0x20) ) lcd_area_set( 0, 0, 399, 239 ); // landscape
+	else lcd_area_set( 0, 0, 239, 399 ); // portrait
 }
 
-void display::area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
+void display::lcd_area_set( unsigned int xb, unsigned int yb, unsigned int xe, unsigned int ye )
 {
 	// move ram pointer if needed
 	if( write_area_x_begin != xb )
 	{
-		set_reg_lcd( 0x02, (xb>>8) );
-		set_reg_lcd( 0x03, xb );
+		lcd_set_reg( 0x02, (xb>>8) );
+		lcd_set_reg( 0x03, xb );
 		write_area_x_begin = xb;
 	}
 	
 	if ( write_area_y_begin != yb )
 	{
-		set_reg_lcd( 0x06, (yb>>8) );
-		set_reg_lcd( 0x07, yb );
+		lcd_set_reg( 0x06, (yb>>8) );
+		lcd_set_reg( 0x07, yb );
 		write_area_y_begin = yb;
 	}
 	
 	if( write_area_x_end != xe )
 	{
-		set_reg_lcd( 0x04, (xe>>8) );
-		set_reg_lcd( 0x05, xe);
+		lcd_set_reg( 0x04, (xe>>8) );
+		lcd_set_reg( 0x05, xe);
 		write_area_x_end = xe;
 	}
 	
 	if( write_area_y_end != ye )
 	{
-		set_reg_lcd( 0x08, (ye)>>8 );
-		set_reg_lcd( 0x09, (ye) );
+		lcd_set_reg( 0x08, (ye)>>8 );
+		lcd_set_reg( 0x09, (ye) );
 		write_area_y_end = ye;
 	}
 }
 
-void display::set_orientation( unsigned char mode )
+void display::lcd_set_orientation( unsigned char mode )
 {
 	//Ram access settings:
 	switch(mode) 
@@ -168,6 +168,6 @@ void display::set_orientation( unsigned char mode )
 			screen_orientation = 0x00;
 			break;
 	}
-	set_reg_lcd(0x16, screen_orientation);
-	area_reset();
+	lcd_set_reg(0x16, screen_orientation);
+	lcd_area_reset();
 }

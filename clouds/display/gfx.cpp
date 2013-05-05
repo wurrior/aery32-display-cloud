@@ -22,7 +22,7 @@ BYTE ImageBuffer[GFX_BUFFER_SIZE];
 extern unsigned char screen_orientation;
 
 void display::test_image() {
-	area_reset();
+	lcd_area_reset();
 	aery::gpio_set_pin_low(CS);
 	aery::gpio_set_pin_low(RS); // write to register
 	send_data_lcd(0x22);
@@ -60,8 +60,14 @@ void display::test_image() {
 void display::set_pixel(unsigned int x,
 		unsigned int y,
 		unsigned int color) {
-	area_set(x, y, x, y);
-	set_reg_lcd(0x22, color);
+	lcd_area_set(x, y, x, y);
+	lcd_set_reg(0x22, color);
+}
+
+unsigned short display::read_pixel(unsigned int x, unsigned int y)
+{
+	lcd_area_set(x,y,x,y);
+	return lcd_read_reg(0x22);
 }
 
 void display::draw_rectangle(unsigned int x,
@@ -81,7 +87,7 @@ void display::fill_rectangle(unsigned int x,
 		unsigned int width,
 		unsigned int height,
 		unsigned int color) {
-	area_set(x, y, x + width - 1, y + height - 1);
+	lcd_area_set(x, y, x + width - 1, y + height - 1);
 	enable_fast_transfer();
 	aery::gpio_set_pin_low(CS);
 	aery::gpio_set_pin_low(RS); // write to register
@@ -93,7 +99,7 @@ void display::fill_rectangle(unsigned int x,
 		send_data_lcd_fast(color);
 	}
 
-	area_reset();
+	lcd_area_reset();
 	disable_fast_transfer();
 }
 
@@ -276,12 +282,12 @@ void display::show_image(unsigned int x,
 	// check current screen orientation:
 	if ((screen_orientation & 0x20)) // landscape
 	{
-		set_reg_lcd(0x16, (screen_orientation^0x40));
-		area_set(x, 240 - y - height, x + width - 1, 240 - y - 1);
+		lcd_set_reg(0x16, (screen_orientation^0x40));
+		lcd_area_set(x, 240 - y - height, x + width - 1, 240 - y - 1);
 	} else // portrait
 	{
-		set_reg_lcd(0x16, (screen_orientation^0x80));
-		area_set(x, 400 - y - height, x + width - 1, 400 - y - 1);
+		lcd_set_reg(0x16, (screen_orientation^0x80));
+		lcd_area_set(x, 400 - y - height, x + width - 1, 400 - y - 1);
 	}
 
 	// begin data transfer:
@@ -383,8 +389,8 @@ void display::show_image(unsigned int x,
 	}
 
 	rc = f_close(&file);
-	area_reset();
-	set_reg_lcd(0x16, screen_orientation);
+	lcd_area_reset();
+	lcd_set_reg(0x16, screen_orientation);
 }
 
 void display::print_text(int x,
