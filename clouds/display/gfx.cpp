@@ -67,6 +67,7 @@ void display::set_pixel(unsigned int x,
 unsigned short display::read_pixel(unsigned int x, unsigned int y)
 {
 	lcd_area_set(x,y,x,y);
+	lcd_read_reg(0x22); // dummy read
 	return lcd_read_reg(0x22);
 }
 

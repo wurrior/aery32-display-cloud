@@ -36,13 +36,11 @@ int display::lcd_read_reg( unsigned short reg )
 	send_data_lcd( reg );
 	aery::gpio_set_pin_high( RS ); //done
 	
-	aery::gpio_init_pins(aery::portb, DATAMASK, GPIO_INPUT);
 	aery::gpio_set_pin_low( RD ); // read register
-	aery::delay_ms(1);
+	aery::gpio_init_pins(aery::portb, DATAMASK, GPIO_INPUT);
 	temp = AVR32_GPIO.port[ 1 ].pvr & DATAMASK;
 	aery::gpio_set_pin_high( RD ); // done
 	aery::gpio_set_pin_high( CS );
-	
 	aery::gpio_init_pins(aery::portb, DATAMASK, GPIO_OUTPUT);
 	
 	return temp;
