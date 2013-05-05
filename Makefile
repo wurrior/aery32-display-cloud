@@ -74,11 +74,16 @@ sp+=
 SETTINGS:=$(subst $(sp),\ ,$(SETTINGS))
 endif
 
+# Resolve the chip SRAM size. Only 128kB version has 32kB RAM.
+SRAM=64
+ifeq ($(MPART), uc3a1128)
+SRAM:=32
+endif
+
 
 # ----------------------------------------------------------------------
 # Standard user variables
 # ----------------------------------------------------------------------
-
 CC=avr32-gcc
 CXX=avr32-g++
 
@@ -109,8 +114,8 @@ LDFLAGS+=-Wl,-Map=$(TARGET).map,--cref
 # ----------------------------------------------------------------------
 # Build targets
 # ----------------------------------------------------------------------
-
 .PHONY: all
+
 all: $(TARGET).hex $(TARGET).lst
 	@echo Program size:
 	@$(MAKE) -s size
@@ -210,9 +215,9 @@ dfu-dump-user:
 size: $(TARGET).elf $(TARGET).hex
 	@avr32-size -B $^
 ifneq (, $(filter $(OS), windows32))
-	@avr32-size -A aery32.elf | awk "$$0 ~ /.heap/" | awk -F" " "{a=64*1024-$$2; print \"SDRAM usage:\", a, \"bytes,\", 100*a/(64*1024), \"%%\"}"
+	@avr32-size -A aery32.elf | awk "$$0 ~ /.heap/" | awk "{a=$(SRAM)*1024-$$2; b=100*a/($(SRAM)*1024); printf \"SRAM usage: %%d bytes (%%.2f%%%%)\n\", a, b}"
 else
-	@avr32-size -A aery32.elf | awk '$$0 ~ /.heap/' | awk -F" " '{a=64*1024-$$2; print "SDRAM usage:", a, "bytes,", 100*a/(64*1024), "%"}'
+	@avr32-size -A aery32.elf | awk '$$0 ~ /.heap/' | awk '{a=$(SRAM)*1024-$$2; b=100*a/($(SRAM)*1024); printf "SRAM usage: %d bytes (%.2f%%)\n", a, b}'
 endif
 
 clean:
