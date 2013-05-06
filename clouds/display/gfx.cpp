@@ -99,9 +99,8 @@ void display::fill_rectangle(unsigned int x,
 	for (i = 0; i < len; i++) {
 		send_data_lcd_fast(color);
 	}
-
-	lcd_area_reset();
 	disable_fast_transfer();
+	lcd_area_reset();
 }
 
 void display::draw_line(unsigned int x1,

@@ -20,8 +20,21 @@ Or use git clone
     cd myproject
 
 ## Release notes
+### v0.2
+- Major code refractioning (names, parameters and performance)
+- Screen orientation is now selectable via 'lcd_set_screenorientation()'
+- Default orintation is now landscape
+- 'print_text()' works now more like 'printf()' in C
+- Added more examples, like FatFs
+- Added support for 8bit BMPs
+- Added functions:
+	- 'draw_rectangle()'
+	- 'draw_circle()'
+	- 'fill_circle()'
+	- 'read_pixel()'
+- Several bug fixes
 
-### v0.1.0
+### v0.1
 
 - Basic functionality to all components.
 - TODO: a lot
