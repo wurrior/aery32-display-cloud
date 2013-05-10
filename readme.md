@@ -1,43 +1,4 @@
-Aery32 Cloud Extensions
-
-
-
-## Installation
-
-Download and unzip into your Aery32 framework folder. Overwrite all files that are prompted.
-
-## Requirements
-
-- Aery32 Framework
-
-## Quick start
-
-To start using Aery32 Display Cloud
-[download the library from GitHub](https://github.com/aery32/aery32-display-cloud).
-Or use git clone
-
-    git clone git://github.com/aery32/aery32-display-cloud.git myproject
-    cd myproject
-
-## Release notes
-### v0.2
-- Major code refractioning (names, parameters and performance)
-- Screen orientation is now selectable via 'lcd_set_screenorientation()'
-- Default orintation is now landscape
-- 'print_text()' works now more like 'printf()' in C
-- Added more examples, like FatFs
-- Added support for 8bit BMPs
-- Added functions:
-	- 'draw_rectangle()'
-	- 'draw_circle()'
-	- 'fill_circle()'
-	- 'read_pixel()'
-- Several bug fixes
-
-### v0.1
-
-- Basic functionality to all components.
-- TODO: a lot
+A simulator for the display cloud.
 
 ## display cloud License
 
